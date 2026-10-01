@@ -1,0 +1,8 @@
+{
+  "name": "Roteirista Shorts Cristão",
+  "description": "Sistema prático para criação de roteiros devocionais, títulos, descrições e prompts de imagem e vídeo para YouTube Shorts cristãos.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
