@@ -109,6 +109,11 @@ export default async function handler(req: ApiRequest, res: ApiResponse) {
       } = payload || {};
 
       const ANGLES = [
+        'Voz de Jesus (Mansidão, Amor Incondicional e Paz Suprema)',
+        'Voz do Apóstolo Paulo (Fervor, Convicção Inabalável e Graça Soberana)',
+        'Voz do Discípulo Pedro (Autenticidade, Superação e Fé Viva)',
+        'Voz do Discípulo Tiago (Sabedoria Prática, Fé Operante e Firmeza Serena)',
+        'Voz do Discípulo Lucas (Empatia, Olhar Médico e Cura Interior)',
         'Pergunta Direta e Provocativa (gancho com pergunta visceral que faz a pessoa parar no feed)',
         'Revelação Espiritual e Quebra de Paradoxo (mostra que Deus age de forma contrária à lógica do mundo)',
         'Acolhimento Íntimo e Voz Paternal (tom caloroso, íntimo, que acolhe a dor e convida ao recomeço)',
@@ -120,6 +125,44 @@ export default async function handler(req: ApiRequest, res: ApiResponse) {
         creativeAngle && creativeAngle !== 'auto'
           ? creativeAngle
           : ANGLES[((variationIndex - 1) % ANGLES.length + Math.floor(Math.random() * ANGLES.length)) % ANGLES.length];
+
+      let personalityDirective = '';
+      if (selectedAngle.includes('Jesus')) {
+        personalityDirective = `
+DIRETRIZ DE VOZ, ESTILO, SENTIMENTO & CARISMA — JESUS:
+- ESTILO DE FALA: Manso, acolhedor, soberano, autoridade sem arrogância, uso de analogias poéticas e vivas da natureza, luz, paz, pastagens e descanso. Fale diretamente ao coração ferido sem nenhuma ponta de condenação ou acusação.
+- SENTIMENTO: Amor incondicional, compaixão profunda, consolo de Pai amoroso, convite ao descanso da alma cansada e perdão restaurador.
+- CARISMA: Serenidade celestial, paz magnética e sublime que acalma tempestades interiores e transmite segurança e salvação.
+`;
+      } else if (selectedAngle.includes('Paulo')) {
+        personalityDirective = `
+DIRETRIZ DE VOZ, ESTILO, SENTIMENTO & CARISMA — APÓSTOLO PAULO:
+- ESTILO DE FALA: Fervoroso, vibrante, persuasivo, teológico e direto ao centro da vocação e perseverança ("combata o bom combate", "nada nos separará do amor de Deus").
+- SENTIMENTO: Paixão ardente pela mensagem, resiliência espiritual nas batalhas, triunfo da graça soberana sobre as fraquezas humanas.
+- CARISMA: Liderança corajosa, convicção contagiante, fé inabalável que desperta força, coragem e transformação de vida no espectador.
+`;
+      } else if (selectedAngle.includes('Pedro')) {
+        personalityDirective = `
+DIRETRIZ DE VOZ, ESTILO, SENTIMENTO & CARISMA — DISCÍPULO PEDRO:
+- ESTILO DE FALA: Humano, visceral, sincero, transparente, testemunho vivo de quem errou, afundou nas águas mas segurou na mão de Cristo e foi restaurado com amor.
+- SENTIMENTO: Arrependimento sincero, esperança viva, coragem restaurada, lealdade profunda e proximidade fraterna com o ouvinte.
+- CARISMA: Calor humano autêntico e empatia de quem entende a fragilidade humana e encontrou a Rocha inabalável da fé.
+`;
+      } else if (selectedAngle.includes('Tiago') || selectedAngle.includes('Thiago')) {
+        personalityDirective = `
+DIRETRIZ DE VOZ, ESTILO, SENTIMENTO & CARISMA — DISCÍPULO TIAGO:
+- ESTILO DE FALA: Prático, direto, sem rodeios, de sabedoria contundente focada em atitudes reais e fé operante ("a fé sem obras é morta").
+- SENTIMENTO: Retidão serena, firmeza moral edificante, paciência e maturidade no meio das provações da vida.
+- CARISMA: Sabedoria de mentor que ensina a ter constância, coerência e paz nas atitudes práticas do dia a dia.
+`;
+      } else if (selectedAngle.includes('Lucas')) {
+        personalityDirective = `
+DIRETRIZ DE VOZ, ESTILO, SENTIMENTO & CARISMA — DISCÍPULO LUCAS:
+- ESTILO DE FALA: Empático, detalhista, acolhedor com olhar médico e sensível da alma, valorizando a oração, a misericórdia e o alívio espiritual.
+- SENTIMENTO: Ternura compassiva, atenção às dores secretas que ninguém vê, esperança curadora e consolo afetuoso.
+- CARISMA: Bálsamo consolador, presença gentil e restauradora que faz o espectador se sentir profundamente compreendido e amparado.
+`;
+      }
 
       const prompt = `
 Você é um roteirista e diretor especializado em vídeos curtos (Shorts) devocionais cristãos.
@@ -133,7 +176,8 @@ ${biblicalReference ? `Referência Bíblica associada: ${biblicalReference}` : '
 
 DIRETRIZ DE VARIAÇÃO CRIATIVA (OBRIGATÓRIO):
 - Esta é a VARIAÇÃO CRIATIVA #${variationIndex}.
-- ÂNGULO CRIATIVO ESCOLHIDO PARA ESTA VARIAÇÃO: "${selectedAngle}".
+- ÂNGULO / VOZ ESCOLHIDA PARA ESTA VARIAÇÃO: "${selectedAngle}".
+${personalityDirective}
 - Crie uma versão FRESCA, INÉDITA, TOTALMENTE DIFERENTE de formulações clichês ou anteriores.
 - Varie totalmente a estrutura do Gancho (Bloco 1), o tom das metáforas e a formulação do CTA suave (Bloco 5).
 - Cada vez que este texto for enviado, sua missão é entregar uma nova joia devocional, profunda, poética e ainda mais emocionante!

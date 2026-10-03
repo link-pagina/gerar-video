@@ -19,36 +19,143 @@ import {
 import { MessageItem, Step1Data } from '../types/script';
 import { GOOGLE_DRIVE_DOC_URL } from '../data/defaultMessages';
 
-export const CREATIVE_ANGLES = [
+export interface CreativeAngleOption {
+  id: string;
+  name: string;
+  shortName?: string;
+  group: 'Vozes Bíblicas' | 'Ângulos Narrativos';
+  character?: 'Jesus' | 'Paulo' | 'Pedro' | 'Tiago' | 'Lucas';
+  avatarEmoji?: string;
+  desc: string;
+  styleOfSpeech: string;
+  feeling: string;
+  charisma: string;
+}
+
+export const BIBLICAL_VOICES: CreativeAngleOption[] = [
   {
-    id: 'auto',
-    name: 'Surpreenda-me (Variação Inédita & Inteligente)',
-    desc: 'O agente escolhe dinamicamente um novo ângulo criativo para esta mensagem.',
+    id: 'Voz de Jesus (Mansidão, Amor Incondicional e Paz Suprema)',
+    name: '👑 Jesus — Mansidão, Amor Incondicional & Paz Sublime',
+    shortName: 'Jesus',
+    group: 'Vozes Bíblicas',
+    character: 'Jesus',
+    avatarEmoji: '👑',
+    desc: 'Voz de soberania mansa, amor incondicional, compaixão e parábolas que acalmam tempestades da alma.',
+    styleOfSpeech: 'Manso, soberano, acolhedor, usando analogias vivas da natureza, sem acusação nem condenação.',
+    feeling: 'Amor incondicional, compaixão profunda, consolo de Pai amoroso e descanso restaurador.',
+    charisma: 'Paz celestial magnética que dissipa qualquer ansiedade e abraça a alma cansada.',
   },
   {
+    id: 'Voz do Apóstolo Paulo (Fervor, Convicção Inabalável e Graça Soberana)',
+    name: '⚡ Apóstolo Paulo — Fervor, Convicção Inabalável & Graça',
+    shortName: 'Paulo',
+    group: 'Vozes Bíblicas',
+    character: 'Paulo',
+    avatarEmoji: '⚡',
+    desc: 'Tom fervoroso, de combate espiritual, convicção inabalável e triunfo absoluto na graça.',
+    styleOfSpeech: 'Vibrante, persuasivo, apaixonado, teológico e direto ao centro da perseverança ("combata o bom combate").',
+    feeling: 'Fervor ardente, esperança combativa, urgência e triunfo inegociável na graça.',
+    charisma: 'Liderança corajosa e contagiante que desperta o guerreiro interior e renova a fé.',
+  },
+  {
+    id: 'Voz do Discípulo Pedro (Autenticidade, Superação e Fé Viva)',
+    name: '🔥 Discípulo Pedro — Autenticidade, Superação & Fé Viva',
+    shortName: 'Pedro',
+    group: 'Vozes Bíblicas',
+    character: 'Pedro',
+    avatarEmoji: '🔥',
+    desc: 'Voz humana e visceral de quem andou sobre as águas, conheceu a fraqueza e foi restaurado pela graça.',
+    styleOfSpeech: 'Transparente, emocional, visceral, próximo do ouvinte, testemunho sincero de superação.',
+    feeling: 'Arrependimento sincero, esperança viva, coragem restaurada e calor fraterno.',
+    charisma: 'Autenticidade que gera identificação imediata com as lutas e recomeços da vida real.',
+  },
+  {
+    id: 'Voz do Discípulo Tiago (Sabedoria Prática, Fé Operante e Firmeza Serena)',
+    name: '⚖️ Discípulo Tiago — Sabedoria Prática & Fé Operante',
+    shortName: 'Tiago',
+    group: 'Vozes Bíblicas',
+    character: 'Tiago',
+    avatarEmoji: '⚖️',
+    desc: 'Voz de sabedoria prática e direta ("a fé sem obras é morta"), firmeza moral e perseverança nas provações.',
+    styleOfSpeech: 'Claro, objetivo, sem rodeios, focado em atitudes transformadoras no dia a dia.',
+    feeling: 'Retidão serena, firmeza moral edificante, paciência e maturidade espiritual.',
+    charisma: 'Sabedoria de mentor que ensina a ter constância, paz e atitudes concretas.',
+  },
+  {
+    id: 'Voz do Discípulo Lucas (Empatia, Olhar Médico e Cura Interior)',
+    name: '🩺 Discípulo Lucas — Empatia, Ternura & Cura Interior',
+    shortName: 'Lucas',
+    group: 'Vozes Bíblicas',
+    character: 'Lucas',
+    avatarEmoji: '🩺',
+    desc: 'Olhar médico e sensível da alma, atento às dores invisíveis, valorizando a oração e o consolo restaurador.',
+    styleOfSpeech: 'Terno, empático, atento aos detalhes do coração, restaurador e consolador.',
+    feeling: 'Compaixão médica, carinho restaurador, sensibilidade e acolhimento afetuoso.',
+    charisma: 'Bálsamo calmante que faz a pessoa se sentir profundamente compreendida e amparada.',
+  },
+];
+
+export const CREATIVE_ANGLES: CreativeAngleOption[] = [
+  {
+    id: 'auto',
+    name: '🎲 Surpreenda-me (Variação Inédita & Inteligente)',
+    shortName: 'Surpreenda-me',
+    group: 'Ângulos Narrativos',
+    desc: 'O agente escolhe dinamicamente entre as vozes bíblicas e ângulos narrativos para criar algo único.',
+    styleOfSpeech: 'Dinâmico, variado e adaptativo ao tema selecionado.',
+    feeling: 'Profundo, espiritual e acolhedor.',
+    charisma: 'Magnetismo devocional inovador a cada clique.',
+  },
+  ...BIBLICAL_VOICES,
+  {
     id: 'Pergunta Direta e Provocativa',
-    name: 'Pergunta Provocativa (Prende a Atenção)',
+    name: '❓ Pergunta Provocativa (Prende a Atenção)',
+    shortName: 'Pergunta',
+    group: 'Ângulos Narrativos',
     desc: 'Gancho visceral com pergunta profunda que faz o espectador parar de rolar o feed.',
+    styleOfSpeech: 'Interrogativo, reflexivo e instigante.',
+    feeling: 'Curiosidade intensa e choque de consciência.',
+    charisma: 'Forte gancho de retenção nos primeiros 3 segundos.',
   },
   {
     id: 'Revelação Espiritual e Quebra de Paradoxo',
-    name: 'Revelação Espiritual (Deus Opera no Oculto)',
+    name: '✨ Revelação Espiritual (Deus Opera no Oculto)',
+    shortName: 'Revelação',
+    group: 'Ângulos Narrativos',
     desc: 'Mostra que a ação divina muitas vezes acontece de forma oposta à lógica humana.',
+    styleOfSpeech: 'Misterioso, profundo e revelador.',
+    feeling: 'Admiração sagrada e quebra de expectativas humanas.',
+    charisma: 'Profundidade teológica acessível e tocante.',
   },
   {
     id: 'Acolhimento Íntimo e Voz Paternal',
-    name: 'Acolhimento Íntimo (Voz Paternal de Amor)',
+    name: '🕊️ Acolhimento Íntimo (Voz Paternal de Amor)',
+    shortName: 'Acolhimento',
+    group: 'Ângulos Narrativos',
     desc: 'Tom caloroso que toca feridas da alma, acolhe a dor e convida ao recomeço.',
+    styleOfSpeech: 'Íntimo, sussurrado ao coração, amoroso e protetor.',
+    feeling: 'Consolo imediato, acolhimento e sensação de abraço seguro.',
+    charisma: 'Calor emocional que traz lágrimas de alívio e conforto.',
   },
   {
     id: 'Metáfora Poética e Contraste Emocional',
-    name: 'Metáfora Poética & Visual (Luz na Tempestade)',
+    name: '🌊 Metáfora Poética & Visual (Luz na Tempestade)',
+    shortName: 'Metáfora',
+    group: 'Ângulos Narrativos',
     desc: 'Usa imagens fortes e poéticas (porto seguro, âncora, orvalho matinal, calmaria).',
+    styleOfSpeech: 'Lírico, poético, cinematográfico e expressivo.',
+    feeling: 'Encantamento estético e serenidade visual.',
+    charisma: 'Beleza de linguagem que eleva os pensamentos a Deus.',
   },
   {
     id: 'Afirmação Contundente de Esperança',
-    name: 'Afirmação Contundente (Fé & Vitória)',
+    name: '🛡️ Afirmação Contundente (Fé & Vitória)',
+    shortName: 'Afirmação',
+    group: 'Ângulos Narrativos',
     desc: 'Declaração marcante de autoridade e triunfo espiritual sobre os medos.',
+    styleOfSpeech: 'Firme, autoritário, encorajador e triunfante.',
+    feeling: 'Certeza inabalável, ousadia e vitória espiritual.',
+    charisma: 'Impacto vigoroso que renova as forças de quem estava desanimado.',
   },
 ];
 
@@ -375,8 +482,8 @@ export const Step1Falas: React.FC<Step1FalasProps> = ({
             </blockquote>
           </div>
 
-          {/* CREATIVE VARIATION SELECTOR */}
-          <div className="mt-5 p-4 rounded-xl bg-slate-950/80 border border-slate-800 space-y-2">
+          {/* CREATIVE VARIATION SELECTOR WITH BIBLICAL VOICES */}
+          <div className="mt-5 p-4 rounded-xl bg-slate-950/90 border border-slate-800 space-y-3">
             <div className="flex items-center justify-between">
               <label className="text-xs font-bold text-amber-300 flex items-center space-x-1.5">
                 <Wand2 className="w-3.5 h-3.5 text-amber-400" />
@@ -387,21 +494,100 @@ export const Step1Falas: React.FC<Step1FalasProps> = ({
               </span>
             </div>
 
-            <select
-              value={creativeAngle}
-              onChange={(e) => onChangeCreativeAngle(e.target.value)}
-              className="w-full p-2.5 bg-slate-900 border border-slate-700 rounded-lg text-xs text-slate-200 focus:outline-none focus:border-amber-500"
-            >
-              {CREATIVE_ANGLES.map((angle) => (
-                <option key={angle.id} value={angle.id}>
-                  {angle.name}
-                </option>
-              ))}
-            </select>
-            <p className="text-[11px] text-slate-400">
-              {CREATIVE_ANGLES.find((a) => a.id === creativeAngle)?.desc ||
-                'Gera uma versão totalmente nova e inédita desta mensagem.'}
-            </p>
+            {/* QUICK SELECTION PILLS FOR BIBLICAL VOICES */}
+            <div className="space-y-1.5">
+              <span className="text-[11px] font-semibold text-slate-400 flex items-center justify-between">
+                <span>Vozes & Personalidades Bíblicas (Estilo, Sentimento & Carisma):</span>
+                <span className="text-[10px] text-amber-400/80">Selecione para aplicar</span>
+              </span>
+              <div className="grid grid-cols-2 sm:grid-cols-5 gap-1.5">
+                {BIBLICAL_VOICES.map((voice) => {
+                  const isSelected = creativeAngle === voice.id;
+                  return (
+                    <button
+                      key={voice.id}
+                      type="button"
+                      onClick={() => onChangeCreativeAngle(voice.id)}
+                      className={`px-2.5 py-2 rounded-lg text-xs font-medium flex items-center justify-center space-x-1.5 border transition cursor-pointer ${
+                        isSelected
+                          ? 'bg-amber-500/20 border-amber-400 text-amber-200 shadow-sm shadow-amber-500/20 ring-1 ring-amber-400/40'
+                          : 'bg-slate-900/90 border-slate-800 text-slate-300 hover:bg-slate-850 hover:border-slate-700'
+                      }`}
+                      title={voice.desc}
+                    >
+                      <span className="text-sm">{voice.avatarEmoji}</span>
+                      <span className="truncate">{voice.shortName}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* FULL SELECT DROPDOWN */}
+            <div className="space-y-1">
+              <label className="text-[11px] font-semibold text-slate-400 block">
+                Ou escolha na lista completa (Vozes Bíblicas ou Ângulos Temáticos):
+              </label>
+              <select
+                value={creativeAngle}
+                onChange={(e) => onChangeCreativeAngle(e.target.value)}
+                className="w-full p-2.5 bg-slate-900 border border-slate-700 rounded-lg text-xs text-slate-200 focus:outline-none focus:border-amber-500"
+              >
+                <optgroup label="👑 Vozes & Personalidades Bíblicas">
+                  {CREATIVE_ANGLES.filter((a) => a.group === 'Vozes Bíblicas').map((angle) => (
+                    <option key={angle.id} value={angle.id}>
+                      {angle.name}
+                    </option>
+                  ))}
+                </optgroup>
+                <optgroup label="✨ Ângulos Narrativos & Criativos">
+                  {CREATIVE_ANGLES.filter((a) => a.group === 'Ângulos Narrativos').map((angle) => (
+                    <option key={angle.id} value={angle.id}>
+                      {angle.name}
+                    </option>
+                  ))}
+                </optgroup>
+              </select>
+            </div>
+
+            {/* DYNAMIC PROFILE CARD (STYLE, FEELING, CHARISMA) */}
+            {(() => {
+              const active = CREATIVE_ANGLES.find((a) => a.id === creativeAngle) || CREATIVE_ANGLES[0];
+              return (
+                <div className="mt-2 p-3.5 rounded-lg bg-slate-900/80 border border-slate-800 space-y-2 text-xs">
+                  <div className="flex items-center space-x-2">
+                    <span className="text-base">{active.avatarEmoji || '✨'}</span>
+                    <span className="font-bold text-amber-300">{active.name}</span>
+                    {active.group === 'Vozes Bíblicas' && (
+                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                        Voz Bíblica Ativa
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-slate-300 text-[11px] leading-relaxed">{active.desc}</p>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-2 border-t border-slate-800 text-[11px]">
+                    <div className="bg-slate-950/70 p-2.5 rounded-lg border border-slate-800/80 space-y-0.5">
+                      <span className="text-amber-400 font-semibold block text-[10px] uppercase tracking-wider">
+                        🗣️ Estilo de Fala
+                      </span>
+                      <span className="text-slate-300 leading-snug">{active.styleOfSpeech}</span>
+                    </div>
+                    <div className="bg-slate-950/70 p-2.5 rounded-lg border border-slate-800/80 space-y-0.5">
+                      <span className="text-rose-400 font-semibold block text-[10px] uppercase tracking-wider">
+                        ❤️ Sentimento
+                      </span>
+                      <span className="text-slate-300 leading-snug">{active.feeling}</span>
+                    </div>
+                    <div className="bg-slate-950/70 p-2.5 rounded-lg border border-slate-800/80 space-y-0.5">
+                      <span className="text-sky-400 font-semibold block text-[10px] uppercase tracking-wider">
+                        ✨ Carisma
+                      </span>
+                      <span className="text-slate-300 leading-snug">{active.charisma}</span>
+                    </div>
+                  </div>
+                </div>
+              );
+            })()}
           </div>
 
           {/* Generation Action Buttons */}
@@ -446,15 +632,30 @@ export const Step1Falas: React.FC<Step1FalasProps> = ({
                   5 blocos
                 </span>
               </div>
-              {step1Data.creativeAngle && (
-                <div className="flex items-center space-x-1.5 text-xs text-amber-300 font-medium">
-                  <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-                  <span>
-                    Variação #{step1Data.variationIndex || 1}:{' '}
-                    <strong className="text-slate-200">{step1Data.creativeAngle.split('(')[0]}</strong>
-                  </span>
-                </div>
-              )}
+              {step1Data.creativeAngle && (() => {
+                const matchedVoice = BIBLICAL_VOICES.find(
+                  (v) =>
+                    step1Data.creativeAngle?.toLowerCase().includes(v.shortName?.toLowerCase() || '') ||
+                    step1Data.creativeAngle?.toLowerCase().includes(v.character?.toLowerCase() || '')
+                );
+                return (
+                  <div className="flex flex-wrap items-center gap-2 text-xs text-amber-300 font-medium">
+                    <div className="flex items-center space-x-1.5">
+                      <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                      <span>
+                        Variação #{step1Data.variationIndex || 1}:{' '}
+                        <strong className="text-slate-200">{step1Data.creativeAngle.split('(')[0]}</strong>
+                      </span>
+                    </div>
+                    {matchedVoice && (
+                      <span className="inline-flex items-center space-x-1 px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30 text-[10px]">
+                        <span>{matchedVoice.avatarEmoji}</span>
+                        <span>Personalidade: {matchedVoice.shortName}</span>
+                      </span>
+                    )}
+                  </div>
+                );
+              })()}
             </div>
 
             <div className="flex flex-wrap items-center gap-2">
