@@ -32,16 +32,16 @@ async function postApi(endpoint: string, action: string, data: Record<string, an
     ...data,
   });
 
-  // First try the specific route (e.g. /api/generate-step-1-2)
-  let response = await fetch(`${API_BASE_URL}/api/${endpoint}`, {
+  // Call the primary serverless endpoint /api/generate directly
+  let response = await fetch(`${API_BASE_URL}/api/generate`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: requestBody,
   });
 
-  // If 404, fallback to the unified serverless endpoint /api/generate
+  // If 404, fallback to specific endpoint /api/{endpoint}
   if (response.status === 404) {
-    response = await fetch(`${API_BASE_URL}/api/generate`, {
+    response = await fetch(`${API_BASE_URL}/api/${endpoint}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: requestBody,
@@ -49,8 +49,15 @@ async function postApi(endpoint: string, action: string, data: Record<string, an
   }
 
   if (!response.ok) {
-    const errorData = await response.json().catch(() => ({}));
-    throw new Error(errorData.error || `Erro HTTP ${response.status} ao processar ${endpoint}`);
+    let errorMsg = '';
+    try {
+      const errorData = await response.json();
+      errorMsg = errorData.error || errorData.message || '';
+    } catch {
+      const text = await response.text().catch(() => '');
+      errorMsg = text;
+    }
+    throw new Error(errorMsg || `Erro HTTP ${response.status} ao processar a geração.`);
   }
 
   return response.json();

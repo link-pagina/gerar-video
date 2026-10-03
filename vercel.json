@@ -5,22 +5,6 @@
   "framework": "vite",
   "rewrites": [
     {
-      "source": "/api/generate-step-1-2",
-      "destination": "/api/generate-step-1-2"
-    },
-    {
-      "source": "/api/generate-step-3",
-      "destination": "/api/generate-step-3"
-    },
-    {
-      "source": "/api/generate-step-4",
-      "destination": "/api/generate-step-4"
-    },
-    {
-      "source": "/api/generate",
-      "destination": "/api/generate"
-    },
-    {
       "source": "/api/(.*)",
       "destination": "/api/generate"
     },

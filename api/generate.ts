@@ -14,15 +14,22 @@ interface ApiResponse extends ServerResponse {
   end: () => this;
 }
 
-const apiKey = process.env.GEMINI_API_KEY || '';
-const ai = new GoogleGenAI({
-  apiKey: apiKey,
-  httpOptions: {
-    headers: {
-      'User-Agent': 'aistudio-build',
+function getApiKey(): string {
+  return process.env.GEMINI_API_KEY || '';
+}
+
+function getAiClient(): GoogleGenAI | null {
+  const key = getApiKey();
+  if (!key) return null;
+  return new GoogleGenAI({
+    apiKey: key,
+    httpOptions: {
+      headers: {
+        'User-Agent': 'aistudio-build',
+      },
     },
-  },
-});
+  });
+}
 
 const CANDIDATE_MODELS = [
   'gemini-3.5-flash',
@@ -38,6 +45,13 @@ async function generateWithRetryAndFallback(params: {
   contents: any;
   config?: any;
 }) {
+  const ai = getAiClient();
+  if (!ai) {
+    throw new Error(
+      'A chave GEMINI_API_KEY não foi configurada no ambiente da Vercel. Por favor, adicione GEMINI_API_KEY nas variáveis de ambiente do projeto na Vercel.'
+    );
+  }
+
   let lastError: any = null;
 
   for (const model of CANDIDATE_MODELS) {
@@ -82,21 +96,35 @@ export default async function handler(req: ApiRequest, res: ApiResponse) {
     return;
   }
 
+  const currentApiKey = getApiKey();
+
   if (req.method === 'GET') {
-    return res.status(200).json({ status: 'ok', hasKey: !!apiKey });
+    return res.status(200).json({ status: 'ok', hasKey: !!currentApiKey });
   }
 
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  if (!apiKey) {
+  if (!currentApiKey) {
     return res.status(500).json({
-      error: 'GEMINI_API_KEY environment variable is not configured on Vercel.',
+      error:
+        'A variável de ambiente GEMINI_API_KEY não foi configurada na Vercel. Acesse Settings > Environment Variables no seu projeto na Vercel, adicione GEMINI_API_KEY e faça um Redeploy.',
     });
   }
 
-  const rawBody = req.body || {};
+  let rawBody = req.body;
+  if (typeof rawBody === 'string') {
+    try {
+      rawBody = JSON.parse(rawBody);
+    } catch {
+      rawBody = {};
+    }
+  }
+  if (!rawBody || typeof rawBody !== 'object') {
+    rawBody = {};
+  }
+
   const requestUrl = (req.url || '').toLowerCase();
 
   // Detect action from body, URL, or specific payload properties
