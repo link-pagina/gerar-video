@@ -96,7 +96,23 @@ export default async function handler(req: ApiRequest, res: ApiResponse) {
     });
   }
 
-  const { action, payload } = req.body || {};
+  const rawBody = req.body || {};
+  const requestUrl = (req.url || '').toLowerCase();
+
+  // Detect action from body, URL, or specific payload properties
+  let action = rawBody.action;
+  if (!action) {
+    if (requestUrl.includes('step-1-2') || rawBody.messageText !== undefined) {
+      action = 'step-1-2';
+    } else if (requestUrl.includes('step-4') || rawBody.characterBlockFixed !== undefined) {
+      action = 'step-4';
+    } else if (requestUrl.includes('step-3') || (rawBody.photoReference !== undefined && rawBody.characterBlockFixed === undefined) || (rawBody.falas !== undefined && rawBody.characterBlockFixed === undefined)) {
+      action = 'step-3';
+    }
+  }
+
+  // Merge payload: support both flat body properties and nested { payload: { ... } }
+  const payload = { ...rawBody, ...(rawBody.payload || {}) };
 
   try {
     if (action === 'step-1-2') {
@@ -106,7 +122,7 @@ export default async function handler(req: ApiRequest, res: ApiResponse) {
         biblicalReference,
         creativeAngle,
         variationIndex = 1,
-      } = payload || {};
+      } = payload;
 
       const ANGLES = [
         'Voz de Jesus (Mansidão, Amor Incondicional e Paz Suprema)',

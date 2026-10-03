@@ -25,6 +25,37 @@ export interface GenerateStep4Response {
 
 const API_BASE_URL = (import.meta.env.VITE_API_URL || '').replace(/\/+$/, '');
 
+async function postApi(endpoint: string, action: string, data: Record<string, any>) {
+  const requestBody = JSON.stringify({
+    action,
+    payload: data,
+    ...data,
+  });
+
+  // First try the specific route (e.g. /api/generate-step-1-2)
+  let response = await fetch(`${API_BASE_URL}/api/${endpoint}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: requestBody,
+  });
+
+  // If 404, fallback to the unified serverless endpoint /api/generate
+  if (response.status === 404) {
+    response = await fetch(`${API_BASE_URL}/api/generate`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: requestBody,
+    });
+  }
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    throw new Error(errorData.error || `Erro HTTP ${response.status} ao processar ${endpoint}`);
+  }
+
+  return response.json();
+}
+
 export async function generateStep1And2(
   messageText: string,
   messageNumber?: number,
@@ -32,71 +63,23 @@ export async function generateStep1And2(
   creativeAngle?: string,
   variationIndex?: number
 ): Promise<GenerateStep1And2Response> {
-  let response = await fetch(`${API_BASE_URL}/api/generate-step-1-2`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      messageText,
-      messageNumber,
-      biblicalReference,
-      creativeAngle,
-      variationIndex,
-    }),
+  return postApi('generate-step-1-2', 'step-1-2', {
+    messageText,
+    messageNumber,
+    biblicalReference,
+    creativeAngle,
+    variationIndex,
   });
-
-  // Fallback to Vercel unified /api/generate endpoint if 404
-  if (response.status === 404) {
-    response = await fetch(`${API_BASE_URL}/api/generate`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        action: 'step-1-2',
-        payload: {
-          messageText,
-          messageNumber,
-          biblicalReference,
-          creativeAngle,
-          variationIndex,
-        },
-      }),
-    });
-  }
-
-  if (!response.ok) {
-    const errorData = await response.json().catch(() => ({}));
-    throw new Error(errorData.error || `Erro HTTP ${response.status} na geração do Passo 1 e 2`);
-  }
-
-  return response.json();
 }
 
 export async function generateStep3(
   falas: FalaBlock[],
   photoReference: ReferencePhoto
 ): Promise<GenerateStep3Response> {
-  let response = await fetch(`${API_BASE_URL}/api/generate-step-3`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ falas, photoReference }),
+  return postApi('generate-step-3', 'step-3', {
+    falas,
+    photoReference,
   });
-
-  if (response.status === 404) {
-    response = await fetch(`${API_BASE_URL}/api/generate`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        action: 'step-3',
-        payload: { falas, photoReference },
-      }),
-    });
-  }
-
-  if (!response.ok) {
-    const errorData = await response.json().catch(() => ({}));
-    throw new Error(errorData.error || `Erro HTTP ${response.status} na geração do Passo 3`);
-  }
-
-  return response.json();
 }
 
 export async function generateStep4(
@@ -104,27 +87,9 @@ export async function generateStep4(
   characterBlockFixed: string,
   photoReference?: ReferencePhoto
 ): Promise<GenerateStep4Response> {
-  let response = await fetch(`${API_BASE_URL}/api/generate-step-4`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ falas, characterBlockFixed, photoReference }),
+  return postApi('generate-step-4', 'step-4', {
+    falas,
+    characterBlockFixed,
+    photoReference,
   });
-
-  if (response.status === 404) {
-    response = await fetch(`${API_BASE_URL}/api/generate`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        action: 'step-4',
-        payload: { falas, characterBlockFixed, photoReference },
-      }),
-    });
-  }
-
-  if (!response.ok) {
-    const errorData = await response.json().catch(() => ({}));
-    throw new Error(errorData.error || `Erro HTTP ${response.status} na geração do Passo 4`);
-  }
-
-  return response.json();
 }

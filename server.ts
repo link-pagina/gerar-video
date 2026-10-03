@@ -3,6 +3,7 @@ import { GoogleGenAI, Type } from '@google/genai';
 import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import vercelGenerateHandler from './api/generate';
 
 dotenv.config();
 
@@ -579,6 +580,11 @@ REGRAS CENTRAIS DOS PROMPTS DE VÍDEO (OBRIGATÓRIAS):
     console.error('Error generating Step 4:', error);
     res.status(500).json({ error: error.message || 'Erro ao gerar Passo 4' });
   }
+});
+
+// Unified route matching Vercel Serverless Function
+app.all('/api/generate', (req, res) => {
+  return vercelGenerateHandler(req, res);
 });
 
 // Setup Vite in development or serve static in production
